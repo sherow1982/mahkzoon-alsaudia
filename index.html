@@ -19,7 +19,6 @@
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-N9QSD3LC');</script>
 <!-- End Google Tag Manager -->
-
 <style>
 :root {
   --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -35,12 +34,11 @@ body {
   background: var(--light);
   color: var(--text);
   line-height: 1.8;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
-}
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
 .header {
   background: #fff;
   border-bottom: 3px solid transparent;
@@ -51,11 +49,7 @@ body {
   z-index: 100;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.header-content { display: flex; justify-content: space-between; align-items: center; }
 .logo {
   font-size: 32px;
   font-weight: 900;
@@ -64,15 +58,26 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.search-box {
-  flex: 1; margin: 0 40px; display: flex; gap: 10px;
+nav {
+  margin: 0 30px;
+  display: flex;
+  gap: 30px;
 }
+nav a {
+  text-decoration: none;
+  color: var(--secondary);
+  font-weight: 700;
+  padding-bottom: 5px;
+  transition: color 0.2s;
+}
+nav a:hover { color: #667eea; }
+.search-box { flex: 1; margin: 0 30px; display: flex; gap: 7px; }
 .search-box input {
   flex: 1; padding: 12px 20px; border: 2px solid var(--border);
   border-radius: 10px; font-size: 15px; font-family: 'Cairo', sans-serif; transition: all 0.3s;
 }
 .search-box input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);}
-.search-box button { padding: 12px 25px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.3s;}
+.search-box button { padding: 12px 20px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.3s;}
 .search-box button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);}
 .cart-icon { font-size: 28px; cursor: pointer; position: relative; transition: transform 0.3s;}
 .cart-icon:hover { transform: scale(1.2);}
@@ -87,8 +92,15 @@ body {
 .hero-btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
 .section-title { font-size: 36px; font-weight: 900; color: var(--secondary); margin: 50px 0 30px; text-align: center;}
 .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; margin: 40px 0;}
-.product-card { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; display: flex; flex-direction: column; }
+.product-card {
+  background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer;
+  display: flex; flex-direction: column; position: relative;
+}
 .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);}
+.product-card .overlay-link {
+  position: absolute; inset: 0; z-index: 10; cursor: pointer;
+}
 .product-image-wrapper { position: relative; overflow: hidden; height: 280px;}
 .product-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;}
 .product-card:hover .product-image { transform: scale(1.1);}
@@ -101,12 +113,18 @@ body {
 .product-price { display: flex; align-items: center; gap: 15px; margin-bottom: 20px;}
 .price-now { font-size: 24px; font-weight: 900; color: #667eea;}
 .price-old { font-size: 16px; color: #cbd5e0; text-decoration: line-through;}
-.product-actions { display: flex; gap: 10px; margin-top: auto;}
+.product-actions {
+  display: flex; gap: 10px; margin-top: auto; position: relative; z-index: 20;
+}
 .btn-cart { flex: 1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; border: none; padding: 12px 15px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: 'Cairo', sans-serif;}
 .btn-cart:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);}
-.btn-view { flex: 1; background: var(--light); color: #667eea; border: 2px solid #667eea; padding: 12px 15px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: 'Cairo', sans-serif;}
-.btn-view:hover { background: #667eea; color: #fff; }
-.load-more-container { text-align: center; margin: 60px 0; }
+.btn-view {
+  background: var(--light); color: #667eea; border: 2px solid #667eea;
+  padding: 12px 15px; border-radius: 10px; font-weight: 700; cursor: pointer;
+  transition: all 0.3s; font-family: 'Cairo', sans-serif;
+}
+.btn-view:hover { background: #667eea; color: #fff;}
+.load-more-container { text-align: center; margin: 60px 0;}
 .load-more-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 18px 50px; border: none; border-radius: 12px; font-size: 18px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; gap: 12px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); font-family: 'Cairo', sans-serif;}
 .load-more-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);}
 .load-more-btn:active { transform: translateY(-2px);}
@@ -119,6 +137,7 @@ body {
 .footer {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff; padding: 50px 40px 20px; margin-top: 80px; border-radius: 20px 20px 0 0; text-align: center;
+  margin-top: auto;
 }
 .footer p { font-size: 14px; margin-bottom: 10px;}
 @media (max-width: 768px) {
@@ -135,26 +154,28 @@ body {
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N9QSD3LC"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
-<!-- Header -->
 <header class="header">
   <div class="container">
     <div class="header-content">
       <a href="index.html" class="logo">مخزون السعودية</a>
+      <nav>
+        <a href="index.html">الرئيسية</a>
+        <a href="products.html">كل المنتجات</a>
+        <a href="cart.html" onclick="goToCart();return false;">السلة</a>
+        <a href="account.html">حسابي</a>
+      </nav>
       <div class="search-box">
         <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
         <button onclick="performSearch()">🔍</button>
       </div>
       <div class="cart-icon" onclick="goToCart()">
-        🛒
-        <span class="cart-count" id="cartCount">0</span>
+        🛒 <span class="cart-count" id="cartCount">0</span>
       </div>
     </div>
   </div>
 </header>
 
-<!-- Hero -->
 <div class="container">
   <div class="hero">
     <h1>🎉 مرحباً بك في مخزون السعودية</h1>
@@ -163,7 +184,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
-<!-- Featured Products -->
 <div class="container">
   <h2 class="section-title">⭐ المنتجات المميزة</h2>
   <div class="products-grid" id="productsGrid"></div>
@@ -181,7 +201,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
-<!-- Footer -->
 <footer class="footer">
   <div class="container">
     <p>&copy; 2025 مخزون السعودية. جميع الحقوق محفوظة.</p>
@@ -203,9 +222,15 @@ async function loadData() {
 }
 loadData();
 
-// دالة لتشفير اسم الملف (يدعم العربي ورموز خاصة بالروابط)
+// دالة آمنة لتشفير اسم الملف للرابط
 function encodeFileName(fileName) {
   return encodeURIComponent(fileName).replace(/%2F/g, '/');
+}
+
+// تفتح صفحة المنتج بشكل مضمون من أي مكان في البطاقة أو زر
+function openProductPage(file) {
+  if (!file) return alert("ملف المنتج غير متوفر");
+  window.open('/products/' + encodeFileName(file), '_blank');
 }
 
 function renderProducts(productsToRender, append = false) {
@@ -213,8 +238,11 @@ function renderProducts(productsToRender, append = false) {
   if (!append) grid.innerHTML = '';
   const html = productsToRender.map(p => {
     const discount = Math.round(((p.price - p.sale_price) / p.price) * 100);
+    if (!p.file) return '';
+    // البطاقة بالكامل قابلة للنقر + زر شاهد المزيد يفتح نفس الصفحة
     return `
-      <div class="product-card">
+      <div class="product-card" onclick="openProductPage('${p.file.replace(/'/g, '\\\'')}')">
+        <a class="overlay-link" href="javascript:void(0);" onclick="openProductPage('${p.file.replace(/'/g, '\\\'')}');event.stopPropagation();"></a>
         <div class="product-image-wrapper">
           <img src="${p.image_link}" alt="${p.title}" class="product-image">
           <span class="product-badge">-${discount}%</span>
@@ -231,7 +259,7 @@ function renderProducts(productsToRender, append = false) {
           </div>
           <div class="product-actions">
             <button class="btn-cart" onclick="addToCart(event, ${p.id})">🛒 أضف للسلة</button>
-            <button class="btn-view" onclick="window.open('/products/${encodeFileName(p.file)}', '_blank'); event.stopPropagation();">شاهد المزيد</button>
+            <button class="btn-view" onclick="openProductPage('${p.file.replace(/'/g, '\\\'')}');event.stopPropagation();">شاهد المزيد</button>
           </div>
         </div>
       </div>
@@ -262,12 +290,13 @@ function loadMore() {
 }
 function addToCart(e, productId) {
   e.stopPropagation();
+  let cartCountVal = Number(document.getElementById('cartCount').textContent) || 0;
+  document.getElementById('cartCount').textContent = cartCountVal + 1;
   const product = allProducts.find(p => p.id === productId);
   alert('✅ تم إضافة ' + product.title + ' للسلة!');
-  updateCartCount();
 }
 function updateCartCount() {
-  document.getElementById('cartCount').textContent = Math.floor(Math.random() * 5) + 1;
+  document.getElementById('cartCount').textContent = 0;
 }
 function performSearch() {
   const query = document.getElementById('searchInput').value.toLowerCase();
@@ -285,7 +314,7 @@ function performSearch() {
   }
 }
 function goToCart() {
-  alert('🛒 السلة قيد التطوير - سيتم إطلاقها قريباً!');
+  alert('🛒 ميزة السلة ستتوفر قريباً.');
 }
 document.getElementById('searchInput').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') performSearch();
