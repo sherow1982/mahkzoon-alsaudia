@@ -1,0 +1,34 @@
+{
+  "categories": [
+    {
+      "id": "electronics",
+      "name": "إلكترونيات",
+      "icon": "📱"
+    },
+    {
+      "id": "home-kitchen",
+      "name": "منزل ومطبخ",
+      "icon": "🏠"
+    },
+    {
+      "id": "beauty-care",
+      "name": "جمال وعناية",
+      "icon": "💄"
+    },
+    {
+      "id": "sports-fitness",
+      "name": "رياضة ولياقة",
+      "icon": "⚽"
+    },
+    {
+      "id": "fashion-accessories",
+      "name": "أزياء وإكسسوارات",
+      "icon": "👗"
+    },
+    {
+      "id": "kids-toys",
+      "name": "ألعاب أطفال",
+      "icon": "🧸"
+    }
+  ]
+}

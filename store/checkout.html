@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إتمام الطلب - مخزون السعودية</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .checkout-container {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+            margin: 40px auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="index.html">مخزون السعودية</a></h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container checkout-container">
+        <div style="background: white; padding: 30px; border-radius: 10px;">
+            <h2 style="color: var(--primary-color); margin-bottom: 30px;">معلومات الشحن</h2>
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label>الاسم الكامل *</label>
+                    <input type="text" id="full-name" required>
+                </div>
+                <div class="form-group">
+                    <label>رقم الجوال *</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label>جوال بديل</label>
+                    <input type="tel" id="alternate-phone">
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="email">
+                </div>
+                <div class="form-group">
+                    <label>العنوان الكامل *</label>
+                    <textarea id="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>المدينة *</label>
+                    <input type="text" id="city" required>
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات إضافية</label>
+                    <textarea id="notes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">إرسال الطلب عبر واتساب</button>
+            </form>
+        </div>
+        
+        <div>
+            <div class="cart-summary">
+                <h3>ملخص الطلب</h3>
+                <div id="order-summary"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+        function displayOrderSummary() {
+            const container = document.getElementById('order-summary');
+            const total = cart.getTotal();
+            const shipping = total > 300 ? 0 : 25;
+            const finalTotal = total + shipping;
+            
+            container.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    ${cart.items.map(item => `
+                        <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                            <span>${item.title} × ${item.quantity}</span>
+                            <span>${(item.price * item.quantity).toFixed(2)} ر.س</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="summary-row">
+                    <span>المجموع الفرعي:</span>
+                    <span>${total.toFixed(2)} ر.س</span>
+                </div>
+                <div class="summary-row">
+                    <span>الشحن:</span>
+                    <span>${shipping === 0 ? 'مجاناً' : shipping + ' ر.س'}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>الإجمالي:</span>
+                    <span>${finalTotal.toFixed(2)} ر.س</span>
+                </div>
+            `;
+        }
+        
+        document.getElementById('checkout-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = {
+                name: document.getElementById('full-name').value,
+                phone: document.getElementById('phone').value,
+                alternatePhone: document.getElementById('alternate-phone').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            let message = `🛍️ *طلب جديد من مخزون السعودية*\n\n`;
+            message += `👤 *الاسم:* ${data.name}\n`;
+            message += `📱 *الجوال:* ${data.phone}\n`;
+            if (data.alternatePhone) message += `📞 *جوال بديل:* ${data.alternatePhone}\n`;
+            if (data.email) message += `📧 *البريد:* ${data.email}\n`;
+            message += `📍 *العنوان:* ${data.address}\n`;
+            message += `🏙️ *المدينة:* ${data.city}\n`;
+            if (data.notes) message += `📝 *ملاحظات:* ${data.notes}\n`;
+            
+            message += `\n📦 *المنتجات:*\n`;
+            cart.items.forEach((item, i) => {
+                message += `${i+1}. ${item.title}\n`;
+                message += `   الكمية: ${item.quantity} × ${item.price} ر.س\n\n`;
+            });
+            
+            const total = cart.getTotal();
+            const shipping = total > 300 ? 0 : 25;
+            message += `💰 *الإجمالي:* ${(total + shipping).toFixed(2)} ر.س`;
+            
+            const whatsappNumber = '966XXXXXXXXX'; // ضع رقمك هنا
+            const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            
+            window.open(url, '_blank');
+            
+            setTimeout(() => {
+                cart.clearCart();
+                alert('تم إرسال طلبك! شكراً لك');
+                window.location.href = 'index.html';
+            }, 1000);
+        });
+        
+        displayOrderSummary();
+        updateCartCount();
+    </script>
+</body>
+</html>

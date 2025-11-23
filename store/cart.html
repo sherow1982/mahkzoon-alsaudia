@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>السلة - مخزون السعودية</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="index.html">مخزون السعودية</a></h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="products.html">المنتجات</a></li>
+                        <li><a href="cart.html" class="active">السلة (<span id="cart-count">0</span>)</a></li>
+                        <li><a href="account.html">حسابي</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="margin: 40px auto;">
+        <h1 style="color: var(--primary-color);">سلة التسوق</h1>
+        
+        <div id="cart-items" class="cart-table"></div>
+        
+        <div id="cart-summary" class="cart-summary"></div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="checkout.html" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">إتمام الطلب</a>
+            <a href="products.html" class="btn" style="background: #6c757d; color: white; margin-right: 15px;">متابعة التسوق</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 مخزون السعودية. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+        function displayCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartSummary = document.getElementById('cart-summary');
+            
+            if (cart.items.length === 0) {
+                cartItems.innerHTML = '<p style="text-align: center; padding: 50px;">السلة فارغة</p>';
+                cartSummary.innerHTML = '';
+                return;
+            }
+            
+            cartItems.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>المنتج</th>
+                            <th>السعر</th>
+                            <th>الكمية</th>
+                            <th>الإجمالي</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${cart.items.map(item => `
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <img src="${item.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+                                        <span>${item.title}</span>
+                                    </div>
+                                </td>
+                                <td>${item.price} ر.س</td>
+                                <td>
+                                    <input type="number" value="${item.quantity}" min="1" 
+                                        onchange="cart.updateQuantity(${item.id}, this.value); displayCart();"
+                                        style="width: 60px; padding: 5px; text-align: center;">
+                                </td>
+                                <td>${(item.price * item.quantity).toFixed(2)} ر.س</td>
+                                <td>
+                                    <button onclick="cart.removeItem(${item.id}); displayCart();" 
+                                        style="background: var(--danger-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+                                        حذف
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            const total = cart.getTotal();
+            const shipping = total > 300 ? 0 : 25;
+            const finalTotal = total + shipping;
+            
+            cartSummary.innerHTML = `
+                <h3>ملخص الطلب</h3>
+                <div class="summary-row">
+                    <span>المجموع الفرعي:</span>
+                    <span>${total.toFixed(2)} ر.س</span>
+                </div>
+                <div class="summary-row">
+                    <span>الشحن:</span>
+                    <span>${shipping === 0 ? 'مجاناً' : shipping + ' ر.س'}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>الإجمالي:</span>
+                    <span>${finalTotal.toFixed(2)} ر.س</span>
+                </div>
+                ${total < 300 ? '<p style="color: #666; font-size: 0.9rem; margin-top: 10px;">شحن مجاني للطلبات فوق 300 ريال</p>' : ''}
+            `;
+        }
+        
+        updateCartCount();
+        displayCart();
+    </script>
+</body>
+</html>

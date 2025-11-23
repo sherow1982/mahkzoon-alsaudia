@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنتجات - مخزون السعودية</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="index.html">مخزون السعودية</a></h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="products.html" class="active">المنتجات</a></li>
+                        <li><a href="cart.html">السلة (<span id="cart-count">0</span>)</a></li>
+                        <li><a href="account.html">حسابي</a></li>
+                    </ul>
+                </nav>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="ابحث عن منتج...">
+                    <button id="search-btn">🔍</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="margin: 40px auto;">
+        <h1 style="color: var(--primary-color); margin-bottom: 30px;">جميع المنتجات</h1>
+        
+        <div style="margin-bottom: 20px;">
+            <label>ترتيب حسب: </label>
+            <select id="sort-select" style="padding: 10px; border-radius: 5px;">
+                <option value="">الافتراضي</option>
+                <option value="price-low">السعر: من الأقل للأعلى</option>
+                <option value="price-high">السعر: من الأعلى للأقل</option>
+                <option value="name">الاسم</option>
+            </select>
+        </div>
+        
+        <div id="products-list" class="products-grid"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 مخزون السعودية. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/search.js"></script>
+    <script>
+        let allProducts = [];
+        
+        loadProducts().then(products => {
+            allProducts = products;
+            displayProducts(products);
+            updateCartCount();
+        });
+        
+        function displayProducts(products) {
+            document.getElementById('products-list').innerHTML = products.map(p => `
+                <div class="product-card">
+                    <a href="products/product-${p.id}.html">
+                        <img src="${p.image_link}" alt="${p.title}" loading="lazy">
+                    </a>
+                    <div class="product-info">
+                        <h3><a href="products/product-${p.id}.html">${p.title}</a></h3>
+                        <div class="product-price">
+                            <span class="old-price">${p.price} ر.س</span>
+                            <span class="current-price">${p.sale_price} ر.س</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="addToCart(${p.id})">أضف للسلة</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        document.getElementById('sort-select').addEventListener('change', function() {
+            const sorted = sortProducts(allProducts, this.value);
+            displayProducts(sorted);
+        });
+    </script>
+</body>
+</html>
