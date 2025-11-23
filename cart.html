@@ -3,17 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>السلة | مخزون السعودية</title>
+<title>سلة التسوق | مخزون السعودية</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap">
 <style>
-body { ... }
+body { font-family: 'Cairo', sans-serif; background: #f7fafc; color: #1a202c; min-height: 100vh; margin:0; display: flex; flex-direction: column;}
+.header, .footer { background: #fff; box-shadow:0 3px 11px #eee;}
+.header{padding:19px 0;position:sticky;top:0;z-index:99;}
+.header-content{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;}
+.logo{font-size:29px;font-weight:bold;background:linear-gradient(135deg,#667eea,#764ba2);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+nav{display:flex;gap:24px;}
+nav a{color:#2d3748;text-decoration:none;font-weight:700;transition:.15s;}
+nav a:hover{color:#764ba2;}
+.cart-title{text-align:center;font-size:28px;margin-top:32px;margin-bottom:20px;color:#764ba2;font-weight:900;}
+.cart-table{max-width:900px;margin:auto;margin-bottom:35px;border-radius:18px;background:#fff;padding:25px;box-shadow:0 2px 14px rgba(0,0,0,.09);}
+.cart-table table{width:100%;border-collapse:collapse;}
+.cart-table th,.cart-table td{padding:11px;font-size:17px;border-bottom:1px solid #e2e8f0;}
+.cart-table th{background:#f7fafc;color:#2d3748;text-align:left;}
+.cart-table img{width:44px;height:44px;border-radius:7px;vertical-align:middle;}
+.cart-table td:last-child{text-align:center;}
+.cart-total{text-align:right;font-size:22px;color:#667eea;font-weight:900;}
+.cart-actions{text-align:center;margin-top:32px;}
+.cart-actions button{
+  background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;
+  border:none;border-radius:10px;padding:15px 40px;font-size:18px;font-weight:900;cursor:pointer;
+  transition:.22s;
+}
+.cart-actions button:hover{filter:brightness(1.07);}
+.footer{margin-top:auto;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:38px 18px 14px;border-radius:22px 22px 0 0;font-size:15px;}
+@media(max-width:650px){
+  .header-content,.cart-table{padding:0 12px;}
+  .cart-title{font-size:22px;}
+  .cart-table table,.cart-table th,.cart-table td{font-size:15px;}
+  .cart-actions button{padding:11px 9px;font-size:15px;}
+}
 </style>
 </head>
 <body>
-<header class="header"> ... </header>
+<header class="header">
+  <div class="header-content">
+    <a href="index.html" class="logo">مخزون السعودية</a>
+    <nav>
+      <a href="index.html">الرئيسية</a>
+      <a href="products.html">كل المنتجات</a>
+      <a href="cart.html">السلة</a>
+      <a href="account.html">حسابي</a>
+      <a href="legal/privacy.html">الخصوصية</a>
+    </nav>
+  </div>
+</header>
 <h1 class="cart-title">سلة التسوق</h1>
-<div class="cart-table"> ... </div>
-<footer class="footer"> ... </footer>
-<script> ... </script>
+<div class="cart-table">
+<table>
+  <thead>
+    <tr>
+      <th>الصورة</th>
+      <th>المنتج</th>
+      <th>السعر</th>
+      <th>الكمية</th>
+      <th>المجموع</th>
+      <th>حذف</th>
+    </tr>
+  </thead>
+  <tbody id="cartBody">
+    <tr><td colspan="6" style="text-align:center;color:#667eea;">السلة فارغة</td></tr>
+  </tbody>
+</table>
+<div class="cart-total" id="cartTotal">الإجمالي: 0 ر.س</div>
+</div>
+<div class="cart-actions">
+  <button onclick="alert('🚀 الدفع غير مفعل حالياً!')">الدفع الآن</button>
+  <button onclick="emptyCart()">إفراغ السلة</button>
+</div>
+<footer class="footer">
+  جميع الحقوق محفوظة © 2025 مخزون السعودية | سياسة الخصوصية | سياسة الاسترجاع | الشروط والاستخدام
+</footer>
+<script>
+function showCart() {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const tbody = document.getElementById('cartBody');
+  if (cart.length===0){
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#667eea;">السلة فارغة</td></tr>';
+    document.getElementById('cartTotal').textContent = 'الإجمالي: 0 ر.س';
+    return;
+  }
+  let total = 0;
+  tbody.innerHTML = cart.map(item=>{
+    let itemTotal = item.price * item.quantity;
+    total += itemTotal;
+    return `<tr>
+      <td><img src="${item.image}" alt="${item.title}" /></td>
+      <td>${item.title}</td>
+      <td>${item.price} ر.س</td>
+      <td>
+        <button onclick="updateItem(${item.id},-1)">-</button>
+        ${item.quantity}
+        <button onclick="updateItem(${item.id},1)">+</button>
+      </td>
+      <td>${itemTotal} ر.س</td>
+      <td><button onclick="removeItem(${item.id})">🗑️ حذف</button></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('cartTotal').textContent = 'الإجمالي: ' + total + ' ر.س';
+}
+function updateItem(id, delta){
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let found = cart.find(item => item.id === id);
+  if(found){
+    found.quantity += delta;
+    if(found.quantity <=0){
+      cart = cart.filter(item => item.id !== id);
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
+  showCart();
+}
+function removeItem(id){
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart = cart.filter(item=>item.id!==id);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  showCart();
+}
+function emptyCart(){
+  localStorage.removeItem('cart');
+  showCart();
+}
+window.onload=showCart;
+</script>
 </body>
 </html>
