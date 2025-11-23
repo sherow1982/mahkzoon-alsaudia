@@ -118,11 +118,7 @@ nav a:hover { color: #667eea; }
 }
 .btn-cart { flex: 1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; border: none; padding: 12px 15px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: 'Cairo', sans-serif;}
 .btn-cart:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);}
-.btn-view {
-  background: var(--light); color: #667eea; border: 2px solid #667eea;
-  padding: 12px 15px; border-radius: 10px; font-weight: 700; cursor: pointer;
-  transition: all 0.3s; font-family: 'Cairo', sans-serif;
-}
+.btn-view { background: var(--light); color: #667eea; border: 2px solid #667eea; padding: 12px 15px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: 'Cairo', sans-serif;}
 .btn-view:hover { background: #667eea; color: #fff;}
 .load-more-container { text-align: center; margin: 60px 0;}
 .load-more-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 18px 50px; border: none; border-radius: 12px; font-size: 18px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; gap: 12px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); font-family: 'Cairo', sans-serif;}
@@ -222,27 +218,32 @@ async function loadData() {
 }
 loadData();
 
-// دالة آمنة لتشفير اسم الملف للرابط
-function encodeFileName(fileName) {
-  return encodeURIComponent(fileName).replace(/%2F/g, '/');
+// توليد اسم ملف المنتج من العنوان تلقائياً حتى لو عربي
+function makeProductFile(title) {
+  if (!title) return '';
+  return encodeURIComponent(
+    title
+      .replace(/\s+/g, '-') // مسافة إلى '-'
+      .replace(/[؟،؛!%$@#^&*()+={[}\]|\\:;"'<>,.?\/]/g, '') // رموز مزعجة
+      .trim()
+  ) + '.html';
 }
 
-// تفتح صفحة المنتج بشكل مضمون من أي مكان في البطاقة أو زر
 function openProductPage(file) {
   if (!file) return alert("ملف المنتج غير متوفر");
-  window.open('/products/' + encodeFileName(file), '_blank');
+  window.open('/products/' + file, '_blank');
 }
 
 function renderProducts(productsToRender, append = false) {
   const grid = document.getElementById('productsGrid');
   if (!append) grid.innerHTML = '';
   const html = productsToRender.map(p => {
+    if (!p.title) return '';
     const discount = Math.round(((p.price - p.sale_price) / p.price) * 100);
-    if (!p.file) return '';
-    // البطاقة بالكامل قابلة للنقر + زر شاهد المزيد يفتح نفس الصفحة
+    const fileName = makeProductFile(p.title);
     return `
-      <div class="product-card" onclick="openProductPage('${p.file.replace(/'/g, '\\\'')}')">
-        <a class="overlay-link" href="javascript:void(0);" onclick="openProductPage('${p.file.replace(/'/g, '\\\'')}');event.stopPropagation();"></a>
+      <div class="product-card" onclick="openProductPage('${fileName}')">
+        <a class="overlay-link" href="javascript:void(0);" onclick="openProductPage('${fileName}');event.stopPropagation();"></a>
         <div class="product-image-wrapper">
           <img src="${p.image_link}" alt="${p.title}" class="product-image">
           <span class="product-badge">-${discount}%</span>
@@ -259,7 +260,7 @@ function renderProducts(productsToRender, append = false) {
           </div>
           <div class="product-actions">
             <button class="btn-cart" onclick="addToCart(event, ${p.id})">🛒 أضف للسلة</button>
-            <button class="btn-view" onclick="openProductPage('${p.file.replace(/'/g, '\\\'')}');event.stopPropagation();">شاهد المزيد</button>
+            <button class="btn-view" onclick="openProductPage('${fileName}');event.stopPropagation();">شاهد المزيد</button>
           </div>
         </div>
       </div>
@@ -300,7 +301,7 @@ function updateCartCount() {
 }
 function performSearch() {
   const query = document.getElementById('searchInput').value.toLowerCase();
-  const filtered = allProducts.filter(p => p.title.toLowerCase().includes(query));
+  const filtered = allProducts.filter(p => p.title && p.title.toLowerCase().includes(query));
   displayedCount = 12;
   renderProducts(filtered.slice(0, 12));
   const loadBtn = document.getElementById('loadMoreBtn');
