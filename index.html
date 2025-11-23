@@ -203,6 +203,11 @@ async function loadData() {
 }
 loadData();
 
+// دالة لتشفير اسم الملف (يدعم العربي ورموز خاصة بالروابط)
+function encodeFileName(fileName) {
+  return encodeURIComponent(fileName).replace(/%2F/g, '/');
+}
+
 function renderProducts(productsToRender, append = false) {
   const grid = document.getElementById('productsGrid');
   if (!append) grid.innerHTML = '';
@@ -226,7 +231,7 @@ function renderProducts(productsToRender, append = false) {
           </div>
           <div class="product-actions">
             <button class="btn-cart" onclick="addToCart(event, ${p.id})">🛒 أضف للسلة</button>
-            <button class="btn-view" onclick="window.open('/products/${p.file}', '_blank'); event.stopPropagation();">شاهد المزيد</button>
+            <button class="btn-view" onclick="window.open('/products/${encodeFileName(p.file)}', '_blank'); event.stopPropagation();">شاهد المزيد</button>
           </div>
         </div>
       </div>
