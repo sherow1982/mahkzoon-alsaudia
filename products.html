@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<script>
+function goToCart() {
+  window.location.href = "cart.html";
+}
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>جميع المنتجات | مخزون السعودية</title>
@@ -14,8 +20,18 @@
   --light: #f7fafc;
   --border: #e2e8f0;
 }
-body { font-family: 'Cairo', sans-serif; background: var(--light); color: var(--text); margin: 0; min-height: 100vh; display: flex; flex-direction: column;}
-.header, .footer { background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.06);}
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--light);
+  color: var(--text);
+  margin: 0; padding: 0;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+.header, .footer {
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
 .header { padding: 18px 0; position: sticky; top: 0; z-index: 50; }
 .header-content { max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center;}
 .logo { font-size: 28px; font-weight: bold; background: var(--primary); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
@@ -26,8 +42,16 @@ nav a:hover { color: #667eea;}
 .cart-count { position: absolute; top: -6px; right: -18px; background: #f5576c; color: #fff; border-radius: 50%; padding: 3px 10px; font-size: 10px; font-weight: bold;}
 .page-title { text-align: center; font-size: 35px; margin: 35px 0 25px; font-weight: 900;}
 .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 24px; max-width:1200px; margin: auto;}
-.product-card {background:#fff;border-radius:15px;box-shadow:0 5px 14px rgba(0,0,0,0.09);display:flex;flex-direction:column;transition:box-shadow .3s,transform .3s;cursor:pointer;position:relative;}
-.product-card:hover {box-shadow:0 5px 32px rgba(102,126,234,0.19);transform:translateY(-5px);}
+.product-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 14px rgba(0,0,0,0.09);
+  display: flex; flex-direction: column;
+  transition: box-shadow .3s, transform .3s;
+  cursor: pointer;
+  position: relative;
+}
+.product-card:hover { box-shadow: 0 5px 32px rgba(102,126,234,0.19); transform: translateY(-5px);}
 .product-image-wrapper { height: 220px; display: flex; align-items: center; justify-content: center;}
 .product-image { max-width: 100%; max-height: 100%; border-radius: 12px;}
 .product-info { padding: 12px 18px; flex:1; display: flex; flex-direction: column;}
@@ -46,22 +70,28 @@ nav a:hover { color: #667eea;}
   font-family: 'Cairo', sans-serif;
   transition: all .25s;
 }
-.btn-cart {background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;}
-.btn-cart:hover {filter:brightness(1.15);}
-.btn-view {background:var(--light);color:#667eea;border:2px solid #667eea;}
-.btn-view:hover {background:#667eea;color:#fff;}
+.btn-cart {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+}
+.btn-cart:hover { filter: brightness(1.15);}
+.btn-view {
+  background: var(--light);
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+.btn-view:hover { background: #667eea; color: #fff;}
 .load-more-container{margin:30px 0;text-align:center}
 .load-more-btn{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:17px 44px; border-radius:10px; font-size:17px; font-weight:bold; border:none;cursor:pointer;}
 .loading{display:none;text-align:center;}
 .spinner{border:4px solid #eee;border-top:4px solid #667eea;border-radius:50%;width:32px;height:32px;animation:spin 1s linear infinite;margin:auto;}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .no-more{text-align:center;font-weight:600;color:#666;margin-top:15px;}
-.footer {margin-top:auto;background:var(--primary);color:#fff;text-align:center;padding:40px 16px 18px;border-radius:24px 24px 0 0;font-size:15px;}
+.footer { margin-top:auto; background: var(--primary); color:#fff; text-align:center; padding:40px 16px 18px; border-radius:24px 24px 0 0; font-size:15px;}
 @media (max-width: 700px){
   .header-content,.products-grid{padding:0 10px;}
   .products-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;}
   .product-title{font-size:15px;}
-  .footer-links{flex-direction:column;gap:8px;}
 }
 </style>
 </head>
@@ -76,10 +106,6 @@ nav a:hover { color: #667eea;}
       <a href="products.html">كل المنتجات</a>
       <a href="#" onclick="goToCart();return false;">السلة</a>
       <a href="account.html">حسابي</a>
-      <a href="legal/privacy.html">الخصوصية</a>
-      <a href="legal/terms.html">الشروط</a>
-      <a href="legal/refund.html">سياسة الاسترجاع</a>
-      <a href="legal/contact.html">اتصل بنا</a>
     </nav>
     <div class="cart-icon" onclick="goToCart()">
       🛒 <span class="cart-count" id="cartCount">0</span>
@@ -93,8 +119,9 @@ nav a:hover { color: #667eea;}
   <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">تحميل المزيد</button>
   <div class="no-more" id="noMore" style="display:none;">✓ تم تحميل جميع المنتجات</div>
 </div>
+
 <footer class="footer">
-  جميع الحقوق محفوظة &copy; 2025 مخزون السعودية | سياسة الخصوصية | سياسة الاسترجاع | الشروط والاستخدام
+  جميع الحقوق محفوظة &copy; 2025 مخزون السعودية | شحن مجاني | إرجاع مجاني | الدفع عند الاستلام
 </footer>
 <script>
 const productsUrl = "https://raw.githubusercontent.com/sherow1982/mahkzoon-alsaudia/main/data/products.json";
@@ -102,22 +129,17 @@ let allProducts = [];
 let displayedCount = 20;
 const itemsPerLoad = 20;
 
+// اسم الملف للمنتج من العنوان مباشرة (حتى لو عربي)
 function makeProductFile(title) {
   if (!title) return '';
-  return title.replace(/\s+/g,'-').replace(/[؟،؛!%$@#^&*()+={[}\]|\\:;"'<>,.?\/]/g,'').trim() + '.html';
+  return (title.replace(/\s+/g,'-').replace(/[؟،؛!%$@#^&*()+={[}\]|\\:;"'<>,.?\/]/g,'').trim())+'.html';
 }
 
 async function loadData() {
-  try {
-    const productsRes = await fetch(productsUrl);
-    allProducts = await productsRes.json();
-    renderProducts(allProducts.slice(0, displayedCount));
-    updateCartCount();
-  } catch(e) {
-    document.getElementById('productsGrid').innerHTML = "<div style='text-align:center;color:#764ba2;font-size:24px;font-weight:700;'>تعذر تحميل المنتجات. تحقق من ملف المنتجات.</div>";
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('loadMoreBtn').style.display = 'none';
-  }
+  const productsRes = await fetch(productsUrl);
+  allProducts = await productsRes.json();
+  renderProducts(allProducts.slice(0, displayedCount));
+  updateCartCount();
 }
 loadData();
 
@@ -125,6 +147,7 @@ function openProductPage(file) {
   if (!file) return alert("ملف المنتج غير متوفر");
   window.open('/products/' + file, '_blank');
 }
+
 function renderProducts(productsToRender, append=false) {
   const grid = document.getElementById('productsGrid');
   if (!append) grid.innerHTML='';
@@ -146,7 +169,7 @@ function renderProducts(productsToRender, append=false) {
             <span class="product-badge">-${discount}%</span>
           </div>
           <div class="product-actions">
-            <button class="btn-cart" onclick="addToCart(event,${p.id},'${p.title.replace(/'/g,"\\'")}',${p.sale_price},'${p.image_link}')">🛒 أضف للسلة</button>
+            <button class="btn-cart" onclick="addToCart(event,${p.id})">🛒 أضف للسلة</button>
             <button class="btn-view" onclick="openProductPage('${fileName}');event.stopPropagation();">شاهد المزيد</button>
           </div>
         </div>
@@ -155,6 +178,7 @@ function renderProducts(productsToRender, append=false) {
   }).join('');
   if (append) grid.insertAdjacentHTML('beforeend', html); else grid.innerHTML = html;
 }
+
 function loadMore() {
   const loading = document.getElementById('loading');
   const loadBtn = document.getElementById('loadMoreBtn');
@@ -175,25 +199,17 @@ function loadMore() {
     else loadBtn.style.display = 'inline-flex';
   },450);
 }
-function addToCart(e, productId, title, price, image) {
+function addToCart(e, productId) {
   e.stopPropagation();
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  let found = cart.find(item => item.id === productId);
-  if (found) {
-    found.quantity += 1;
-  } else {
-    cart.push({ id: productId, title: title, price: price, image: image, quantity: 1 });
-  }
-  localStorage.setItem('cart', JSON.stringify(cart));
-  updateCartCount();
-  alert('✅ تم إضافة ' + title + ' للسلة!');
+  let cartCountVal = Number(document.getElementById('cartCount').textContent) || 0;
+  document.getElementById('cartCount').textContent = cartCountVal + 1;
+  const product = allProducts.find(p => p.id === productId);
+  alert('✅ تم إضافة ' + product.title + ' للسلة!');
 }
 function updateCartCount() {
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const n = cart.reduce((total, item) => total+item.quantity, 0);
-  document.getElementById('cartCount').textContent = n;
+  document.getElementById('cartCount').textContent = 0;
 }
-function goToCart() { window.location.href = "cart.html"; }
+function goToCart() { alert("🛒 ميزة السلة قيد التطوير."); }
 </script>
 </body>
 </html>
