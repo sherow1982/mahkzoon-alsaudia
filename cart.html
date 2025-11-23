@@ -139,7 +139,7 @@ function orderWhatsapp(){
   let total = cart.reduce((total,item)=>total+(item.price*item.quantity),0);
   msg += `الإجمالي: ${total} ر.س%0A`;
   msg += "يرجى كتابة اسمك وعنوانك ورقم الهاتف لإتمام الطلب 👇%0A";
-  let whatsapp = "https://wa.me/20110760081?text=" + msg; // غيّر الرقم لرقم الواتساب المطلوب
+  let whatsapp = "https://wa.me/201110760081?text=" + msg;
   window.open(whatsapp, "_blank");
 }
 window.onload=showCart;
