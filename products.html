@@ -1,92 +1,209 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنتجات - مخزون السعودية</title>
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جميع المنتجات | مخزون السعودية</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap">
+<style>
+:root {
+  --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary: #2d3748;
+  --accent: #f6ad55;
+  --text: #1a202c;
+  --light: #f7fafc;
+  --border: #e2e8f0;
+}
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--light);
+  color: var(--text);
+  margin: 0; padding: 0;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+.header, .footer {
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+.header { padding: 18px 0; position: sticky; top: 0; z-index: 50; }
+.header-content { max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center;}
+.logo { font-size: 28px; font-weight: bold; background: var(--primary); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+nav { display: flex; gap: 18px;}
+nav a { color: var(--secondary); text-decoration: none; font-weight: 700; transition: color 0.2s;}
+nav a:hover { color: #667eea;}
+.cart-icon { font-size: 24px; position: relative;}
+.cart-count { position: absolute; top: -6px; right: -18px; background: #f5576c; color: #fff; border-radius: 50%; padding: 3px 10px; font-size: 10px; font-weight: bold;}
+.page-title { text-align: center; font-size: 35px; margin: 35px 0 25px; font-weight: 900;}
+.products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 24px; max-width:1200px; margin: auto;}
+.product-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 14px rgba(0,0,0,0.09);
+  display: flex; flex-direction: column;
+  transition: box-shadow .3s, transform .3s;
+  cursor: pointer;
+  position: relative;
+}
+.product-card:hover { box-shadow: 0 5px 32px rgba(102,126,234,0.19); transform: translateY(-5px);}
+.product-image-wrapper { height: 220px; display: flex; align-items: center; justify-content: center;}
+.product-image { max-width: 100%; max-height: 100%; border-radius: 12px;}
+.product-info { padding: 12px 18px; flex:1; display: flex; flex-direction: column;}
+.product-title { font-size: 18px; font-weight: 700; color: var(--secondary); margin-bottom: 10px;}
+.product-rating { margin-bottom: 7px; color: #f6ad55; }
+.product-price { margin-bottom: 15px; display: flex; gap: 9px; font-size: 16px;}
+.price-now { font-weight: bold; color: #764ba2;}
+.price-old { color: #d1d5db; text-decoration: line-through;}
+.product-actions { margin-top:auto; display: flex; gap:8px;}
+.btn-cart, .btn-view {
+  padding: 11px 15px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-family: 'Cairo', sans-serif;
+  transition: all .25s;
+}
+.btn-cart {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+}
+.btn-cart:hover { filter: brightness(1.15);}
+.btn-view {
+  background: var(--light);
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+.btn-view:hover { background: #667eea; color: #fff;}
+.load-more-container{margin:30px 0;text-align:center}
+.load-more-btn{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:17px 44px; border-radius:10px; font-size:17px; font-weight:bold; border:none;cursor:pointer;}
+.loading{display:none;text-align:center;}
+.spinner{border:4px solid #eee;border-top:4px solid #667eea;border-radius:50%;width:32px;height:32px;animation:spin 1s linear infinite;margin:auto;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.no-more{text-align:center;font-weight:600;color:#666;margin-top:15px;}
+.footer { margin-top:auto; background: var(--primary); color:#fff; text-align:center; padding:40px 16px 18px; border-radius:24px 24px 0 0; font-size:15px;}
+@media (max-width: 700px){
+  .header-content,.products-grid{padding:0 10px;}
+  .products-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;}
+  .product-title{font-size:15px;}
+}
+</style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1><a href="index.html">مخزون السعودية</a></h1>
-                </div>
-                <nav class="main-nav">
-                    <ul>
-                        <li><a href="index.html">الرئيسية</a></li>
-                        <li><a href="products.html" class="active">المنتجات</a></li>
-                        <li><a href="cart.html">السلة (<span id="cart-count">0</span>)</a></li>
-                        <li><a href="account.html">حسابي</a></li>
-                    </ul>
-                </nav>
-                <div class="search-box">
-                    <input type="text" id="search-input" placeholder="ابحث عن منتج...">
-                    <button id="search-btn">🔍</button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="container" style="margin: 40px auto;">
-        <h1 style="color: var(--primary-color); margin-bottom: 30px;">جميع المنتجات</h1>
-        
-        <div style="margin-bottom: 20px;">
-            <label>ترتيب حسب: </label>
-            <select id="sort-select" style="padding: 10px; border-radius: 5px;">
-                <option value="">الافتراضي</option>
-                <option value="price-low">السعر: من الأقل للأعلى</option>
-                <option value="price-high">السعر: من الأعلى للأقل</option>
-                <option value="name">الاسم</option>
-            </select>
-        </div>
-        
-        <div id="products-list" class="products-grid"></div>
+<header class="header">
+  <div class="header-content">
+    <div>
+      <a href="index.html" class="logo">مخزون السعودية</a>
     </div>
+    <nav>
+      <a href="index.html">الرئيسية</a>
+      <a href="products.html">كل المنتجات</a>
+      <a href="#" onclick="goToCart();return false;">السلة</a>
+      <a href="account.html">حسابي</a>
+    </nav>
+    <div class="cart-icon" onclick="goToCart()">
+      🛒 <span class="cart-count" id="cartCount">0</span>
+    </div>
+  </div>
+</header>
+<h1 class="page-title">جميع المنتجات</h1>
+<div class="products-grid" id="productsGrid"></div>
+<div class="loading" id="loading"><div class="spinner"></div></div>
+<div class="load-more-container">
+  <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">تحميل المزيد</button>
+  <div class="no-more" id="noMore" style="display:none;">✓ تم تحميل جميع المنتجات</div>
+</div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2025 مخزون السعودية. جميع الحقوق محفوظة.</p>
-            </div>
+<footer class="footer">
+  جميع الحقوق محفوظة &copy; 2025 مخزون السعودية | شحن مجاني | إرجاع مجاني | الدفع عند الاستلام
+</footer>
+<script>
+const productsUrl = "https://raw.githubusercontent.com/sherow1982/mahkzoon-alsaudia/main/data/products.json";
+let allProducts = [];
+let displayedCount = 20;
+const itemsPerLoad = 20;
+
+// اسم الملف للمنتج من العنوان مباشرة (حتى لو عربي)
+function makeProductFile(title) {
+  if (!title) return '';
+  return encodeURIComponent(title.replace(/\s+/g,'-').replace(/[؟،؛!%$@#^&*()+={[}\]|\\:;"'<>,.?\/]/g,'').trim())+'.html';
+}
+
+async function loadData() {
+  const productsRes = await fetch(productsUrl);
+  allProducts = await productsRes.json();
+  renderProducts(allProducts.slice(0, displayedCount));
+  updateCartCount();
+}
+loadData();
+
+function openProductPage(file) {
+  if (!file) return alert("ملف المنتج غير متوفر");
+  window.open('/products/' + file, '_blank');
+}
+
+function renderProducts(productsToRender, append=false) {
+  const grid = document.getElementById('productsGrid');
+  if (!append) grid.innerHTML='';
+  const html = productsToRender.map(p => {
+    if (!p.title) return '';
+    const discount = Math.round(((p.price - p.sale_price) / p.price) * 100);
+    const fileName = makeProductFile(p.title);
+    return `
+      <div class="product-card" onclick="openProductPage('${fileName}')">
+        <div class="product-image-wrapper">
+          <img src="${p.image_link}" alt="${p.title}" class="product-image">
         </div>
-    </footer>
+        <div class="product-info">
+          <h3 class="product-title">${p.title}</h3>
+          <div class="product-rating">★★★★★ <span style="color:#aaa;font-size:13px">(15)</span></div>
+          <div class="product-price">
+            <span class="price-now">${p.sale_price} ر.س</span>
+            <span class="price-old">${p.price} ر.س</span>
+            <span class="product-badge">-${discount}%</span>
+          </div>
+          <div class="product-actions">
+            <button class="btn-cart" onclick="addToCart(event,${p.id})">🛒 أضف للسلة</button>
+            <button class="btn-view" onclick="openProductPage('${fileName}');event.stopPropagation();">شاهد المزيد</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  if (append) grid.insertAdjacentHTML('beforeend', html); else grid.innerHTML = html;
+}
 
-    <script src="js/products.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/search.js"></script>
-    <script>
-        let allProducts = [];
-        
-        loadProducts().then(products => {
-            allProducts = products;
-            displayProducts(products);
-            updateCartCount();
-        });
-        
-        function displayProducts(products) {
-            document.getElementById('products-list').innerHTML = products.map(p => `
-                <div class="product-card">
-                    <a href="products/product-${p.id}.html">
-                        <img src="${p.image_link}" alt="${p.title}" loading="lazy">
-                    </a>
-                    <div class="product-info">
-                        <h3><a href="products/product-${p.id}.html">${p.title}</a></h3>
-                        <div class="product-price">
-                            <span class="old-price">${p.price} ر.س</span>
-                            <span class="current-price">${p.sale_price} ر.س</span>
-                        </div>
-                        <button class="btn btn-primary" onclick="addToCart(${p.id})">أضف للسلة</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        document.getElementById('sort-select').addEventListener('change', function() {
-            const sorted = sortProducts(allProducts, this.value);
-            displayProducts(sorted);
-        });
-    </script>
+function loadMore() {
+  const loading = document.getElementById('loading');
+  const loadBtn = document.getElementById('loadMoreBtn');
+  const noMore = document.getElementById('noMore');
+  loading.style.display='block';
+  loadBtn.style.display='none';
+  setTimeout(()=>{
+    const nextProducts = allProducts.slice(displayedCount, displayedCount+itemsPerLoad);
+    if (nextProducts.length === 0) {
+      loading.style.display = 'none';
+      noMore.style.display = 'block';
+      return;
+    }
+    renderProducts(nextProducts, true);
+    displayedCount += itemsPerLoad;
+    loading.style.display = 'none';
+    if (displayedCount >= allProducts.length) noMore.style.display='block';
+    else loadBtn.style.display = 'inline-flex';
+  },450);
+}
+function addToCart(e, productId) {
+  e.stopPropagation();
+  let cartCountVal = Number(document.getElementById('cartCount').textContent) || 0;
+  document.getElementById('cartCount').textContent = cartCountVal + 1;
+  const product = allProducts.find(p => p.id === productId);
+  alert('✅ تم إضافة ' + product.title + ' للسلة!');
+}
+function updateCartCount() {
+  document.getElementById('cartCount').textContent = 0;
+}
+function goToCart() { alert("🛒 ميزة السلة قيد التطوير."); }
+</script>
 </body>
 </html>
