@@ -71,7 +71,7 @@ nav a:hover{color:#764ba2;}
 <div class="cart-total" id="cartTotal">الإجمالي: 0 ر.س</div>
 </div>
 <div class="cart-actions">
-  <button onclick="alert('🚀 الدفع غير مفعل حالياً!')">الدفع الآن</button>
+  <button onclick="orderWhatsapp()">اتمام الطلب عبر واتساب</button>
   <button onclick="emptyCart()">إفراغ السلة</button>
 </div>
 <footer class="footer">
@@ -126,6 +126,21 @@ function removeItem(id){
 function emptyCart(){
   localStorage.removeItem('cart');
   showCart();
+}
+// تحويل الطلب إلى واتساب
+function orderWhatsapp(){
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  if(cart.length === 0){ alert("السلة فارغة!"); return; }
+  let msg = "طلب من موقع مخزون السعودية:%0A";
+  cart.forEach(item=>{
+    msg += `- ${item.title} | كمية: ${item.quantity} | سعر: ${item.price} ر.س%0A`;
+  });
+  msg += "-----------------%0A";
+  let total = cart.reduce((total,item)=>total+(item.price*item.quantity),0);
+  msg += `الإجمالي: ${total} ر.س%0A`;
+  msg += "يرجى كتابة اسمك وعنوانك ورقم الهاتف لإتمام الطلب 👇%0A";
+  let whatsapp = "https://wa.me/20110760081?text=" + msg; // غيّر الرقم لرقم الواتساب المطلوب
+  window.open(whatsapp, "_blank");
 }
 window.onload=showCart;
 </script>
