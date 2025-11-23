@@ -55,37 +55,35 @@ nav a {color:#2d3748; text-decoration:none; font-weight:700;}
 </footer>
 <script>
 function goToCart() { window.location.href = "cart.html"; }
-
-// جلب قائمة الملفات من فولدر المنتجات في الريبو (بدون توليد أو ترميز)
-async function getProductFiles() {
-  const apiUrl = 'https://api.github.com/repos/sherow1982/mahkzoon-alsaudia/contents/products';
-  const res = await fetch(apiUrl);
-  const files = await res.json();
-  return files.filter(f => f.name.endsWith('.html')).map(f => f.name);
+const productsUrl = "https://raw.githubusercontent.com/sherow1982/mahkzoon-alsaudia/main/data/products.json";
+function makeProductFile(title) {
+  if (!title) return '';
+  return title.replace(/\s+/g,'-').replace(/[؟،؛!%$@#^&*()+={[}|\:;"'<>,.?\/]/g,'').trim() + '.html';
 }
-
-// البحث والفلترة في الملفات
-let allFiles = [];
-function renderProducts(files){
+let allProducts = [];
+function renderProducts(products){
   const grid = document.getElementById('productsGrid');
-  grid.innerHTML = files.map(filename => `
-    <div class="product-card" onclick="window.open('/products/${filename}', '_blank')">
-      <div class="product-title">${filename.replace('.html','')}</div>
-      <a class="btn-view" href="/products/${filename}" target="_blank">شاهد المنتج</a>
-    </div>
-  `).join('');
+  grid.innerHTML = products.map(p=>{
+    const fileName = makeProductFile(p.title);
+    return `
+      <div class="product-card">
+        <img src="${p.image_link}" alt="${p.title}" style="max-width:140px;max-height:140px;border-radius:8px;margin-bottom:10px;">
+        <div style="font-weight:700;margin-bottom:7px">${p.title}</div>
+        <div style="color:#764ba2;font-weight:bold">${p.sale_price} ر.س <del style="color:#aaa">${p.price} ر.س</del></div>
+        <a href="/products/${fileName}" target="_blank" class="btn-view">شاهد المنتج</a>
+      </div>
+    `
+  }).join('');
 }
-
-getProductFiles().then(files => {
-  allFiles = files;
-  renderProducts(files);
+fetch(productsUrl).then(p=>p.json()).then(products=>{
+  allProducts = products;
+  renderProducts(products);
   document.getElementById('searchInput').oninput = function(){
     const val = this.value.trim();
-    if(!val) renderProducts(allFiles);
-    else renderProducts(allFiles.filter(f=>f.includes(val)));
+    if(!val) renderProducts(allProducts);
+    else renderProducts(allProducts.filter(f=>f.title.includes(val)));
   };
 });
-
 // زر العودة لأعلى
 const scrollBtn = document.getElementById('scrollTop');
 window.onscroll = function(){ 
