@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8JYRZRP56"></script>
 <script>
@@ -17,7 +16,6 @@
   gtag('js', new Date());
   gtag('config', 'G-G8JYRZRP56');
 </script>
-
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-N9QSD3LC');</script>
 <!-- End Google Tag Manager -->
@@ -134,7 +132,6 @@ body {
 </style>
 </head>
 <body>
-
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N9QSD3LC"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -193,22 +190,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </footer>
 
 <script>
-// روابط الجلب من الريبو مباشرة
 const productsUrl = "https://raw.githubusercontent.com/sherow1982/mahkzoon-alsaudia/main/data/products.json";
-const categoriesUrl = "https://raw.githubusercontent.com/sherow1982/mahkzoon-alsaudia/main/data/categories.json";
 let allProducts = [];
-let allCategories = [];
 let displayedCount = 12;
 const itemsPerLoad = 12;
 
-// جلب المنتجات والفئات تلقائياً
 async function loadData() {
-  const [productsRes, categoriesRes] = await Promise.all([
-    fetch(productsUrl),
-    fetch(categoriesUrl)
-  ]);
+  const productsRes = await fetch(productsUrl);
   allProducts = await productsRes.json();
-  allCategories = await categoriesRes.json();
   renderProducts(allProducts.slice(0, displayedCount));
   updateCartCount();
 }
@@ -219,7 +208,6 @@ function renderProducts(productsToRender, append = false) {
   if (!append) grid.innerHTML = '';
   const html = productsToRender.map(p => {
     const discount = Math.round(((p.price - p.sale_price) / p.price) * 100);
-    const slug = p.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[-\s]+/g, '-').trim('-');
     return `
       <div class="product-card">
         <div class="product-image-wrapper">
@@ -238,7 +226,7 @@ function renderProducts(productsToRender, append = false) {
           </div>
           <div class="product-actions">
             <button class="btn-cart" onclick="addToCart(event, ${p.id})">🛒 أضف للسلة</button>
-            <button class="btn-view" onclick="window.open('/products/${slug}.html', '_blank'); event.stopPropagation();">شاهد المزيد</button>
+            <button class="btn-view" onclick="window.open('/products/${p.file}', '_blank'); event.stopPropagation();">شاهد المزيد</button>
           </div>
         </div>
       </div>
@@ -298,6 +286,5 @@ document.getElementById('searchInput').addEventListener('keypress', function(e) 
   if (e.key === 'Enter') performSearch();
 });
 </script>
-
 </body>
 </html>
