@@ -1,50 +1,105 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+سكريبت توليد جميع صفحات المنتجات من جديد
+نسخة محسّنة - تعالج الأحرف الخاصة في أسماء الملفات
+"""
+
+import json
+import os
+import re
+import shutil
+from pathlib import Path
+
+def slugify(text):
+    """تحويل النص إلى slug مناسب لاسم الملف"""
+    # إزالة ... من النهاية
+    text = text.replace('...', '')
+    
+    # إزالة الأحرف الخاصة الممنوعة في Windows
+    forbidden_chars = ['*', ':', '?', '"', '<', '>', '|', '/', '\\', '\t', '\n', '\r']
+    for char in forbidden_chars:
+        text = text.replace(char, '')
+    
+    # إزالة الأقواس والنقاط والفواصل
+    text = text.replace('(', '').replace(')', '').replace('.', '').replace(',', '')
+    
+    # تحويل المسافات المتعددة إلى مسافة واحدة
+    text = re.sub(r'\s+', ' ', text)
+    
+    # تحويل المسافات إلى شرطات
+    text = text.replace(' ', '-')
+    
+    # إزالة الشرطات المتعددة
+    text = re.sub(r'-+', '-', text)
+    
+    # إزالة الشرطات من البداية والنهاية
+    text = text.strip('-')
+    
+    # تحويل إلى أحرف صغيرة
+    text = text.lower()
+    
+    return text
+
+def create_product_html(product):
+    """إنشاء صفحة HTML كاملة للمنتج"""
+    
+    product_id = product['id']
+    title = product['title']
+    image = product['image_link']
+    price = product['price']
+    sale_price = product['sale_price']
+    
+    slug = slugify(title)
+    discount = int((1 - sale_price/price) * 100)
+    
+    html_content = f"""<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>كابل شحن ونقل بيانات سريع  3x1... | مخزون السعودية</title>
-<meta name="description" content="اشتري كابل شحن ونقل بيانات سريع  3x1... بسعر 178 ريال سعودي فقط. شحن مجاني، إرجاع مجاني، الدفع عند الاستلام.">
-<meta name="keywords" content="كابل شحن ونقل بيانات سريع  3x1..., شراء كابل شحن ونقل بيانات سريع  3x1..., كابل شحن ونقل بيانات سريع  3x1... السعودية">
-<link rel="canonical" href="https://mahkzoon-alsaudia.arabsad.com/products/كابل-شحن-ونقل-بيانات-سريع--3x1.html">
-<meta property="og:title" content="كابل شحن ونقل بيانات سريع  3x1...">
-<meta property="og:description" content="اشتري كابل شحن ونقل بيانات سريع  3x1... بسعر 178 ريال سعودي فقط. شحن مجاني، إرجاع مجاني، الدفع عند الاستلام.">
-<meta property="og:image" content="https://m5zoon.com/public/uploads/products/1757780851171615.webp">
-<meta property="og:url" content="https://mahkzoon-alsaudia.arabsad.com/products/كابل-شحن-ونقل-بيانات-سريع--3x1.html">
+<title>{title} | مخزون السعودية</title>
+<meta name="description" content="اشتري {title} بسعر {sale_price} ريال سعودي فقط. شحن مجاني، إرجاع مجاني، الدفع عند الاستلام.">
+<meta name="keywords" content="{title}, شراء {title}, {title} السعودية">
+<link rel="canonical" href="https://mahkzoon-alsaudia.arabsad.com/products/{slug}.html">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="اشتري {title} بسعر {sale_price} ريال سعودي فقط. شحن مجاني، إرجاع مجاني، الدفع عند الاستلام.">
+<meta property="og:image" content="{image}">
+<meta property="og:url" content="https://mahkzoon-alsaudia.arabsad.com/products/{slug}.html">
 <meta property="og:type" content="product">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{
+{{
   "@context": "https://schema.org/",
   "@type": "Product",
-  "name": "كابل شحن ونقل بيانات سريع  3x1...",
-  "image": "https://m5zoon.com/public/uploads/products/1757780851171615.webp",
-  "description": "كابل شحن ونقل بيانات سريع  3x1... - منتج عالي الجودة متوفر الآن بأفضل الأسعار. احصل عليه مع ضمان الجودة والإرجاع المجاني.",
-  "sku": "230",
-  "brand": {
+  "name": "{title}",
+  "image": "{image}",
+  "description": "{title} - منتج عالي الجودة متوفر الآن بأفضل الأسعار. احصل عليه مع ضمان الجودة والإرجاع المجاني.",
+  "sku": "{product_id}",
+  "brand": {{
     "@type": "Brand",
     "name": "مخزون السعودية"
-  },
-  "offers": {
+  }},
+  "offers": {{
     "@type": "Offer",
-    "url": "https://mahkzoon-alsaudia.arabsad.com/products/كابل-شحن-ونقل-بيانات-سريع--3x1.html",
+    "url": "https://mahkzoon-alsaudia.arabsad.com/products/{slug}.html",
     "priceCurrency": "SAR",
-    "price": "178",
+    "price": "{sale_price}",
     "priceValidUntil": "2026-12-31",
     "availability": "https://schema.org/InStock",
     "itemCondition": "https://schema.org/NewCondition"
-  },
-  "aggregateRating": {
+  }},
+  "aggregateRating": {{
     "@type": "AggregateRating",
     "ratingValue": "4.8",
     "reviewCount": "12"
-  }
-}
+  }}
+}}
 </script>
 <style>
-:root {
+:root {{
   --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary: #2d3748;
   --accent: #f6ad55;
@@ -52,28 +107,28 @@
   --text: #1a202c;
   --light: #f7fafc;
   --border: #e2e8f0;
-}
+}}
 
-* {
+* {{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
+}}
 
-body {
+body {{
   font-family: 'Cairo', sans-serif;
   background: var(--light);
   color: var(--text);
   line-height: 1.8;
-}
+}}
 
-.container {
+.container {{
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-}
+}}
 
-.header {
+.header {{
   background: #fff;
   border-bottom: 3px solid transparent;
   border-image: var(--primary) 1;
@@ -82,9 +137,9 @@ body {
   top: 0;
   z-index: 100;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-}
+}}
 
-.logo {
+.logo {{
   font-size: 28px;
   font-weight: 900;
   background: var(--primary);
@@ -92,78 +147,78 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-decoration: none;
-}
+}}
 
-.breadcrumb {
+.breadcrumb {{
   padding: 20px 0;
   font-size: 14px;
   color: #718096;
-}
+}}
 
-.breadcrumb a {
+.breadcrumb a {{
   color: #667eea;
   text-decoration: none;
   font-weight: 600;
-}
+}}
 
-.product-grid {
+.product-grid {{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   margin: 40px 0;
-}
+}}
 
-.gallery {
+.gallery {{
   position: sticky;
   top: 120px;
   height: fit-content;
-}
+}}
 
-.product-img {
+.product-img {{
   width: 100%;
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+}}
 
-.product-img:hover {
+.product-img:hover {{
   transform: scale(1.05) rotate(2deg);
-}
+}}
 
-.summary {
+.summary {{
   background: #fff;
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-}
+}}
 
-.title {
+.title {{
   font-size: 36px;
   font-weight: 900;
   color: var(--secondary);
   margin-bottom: 20px;
   line-height: 1.3;
-}
+}}
 
-.rating {
+.rating {{
   display: flex;
   align-items: center;
   gap: 15px;
   margin-bottom: 25px;
-}
+}}
 
-.stars {
+.stars {{
   color: #f6ad55;
   font-size: 22px;
   letter-spacing: 3px;
-}
+}}
 
-.reviews {
+.reviews {{
   color: #718096;
   font-weight: 600;
-}
+}}
 
-.price-box {
+.price-box {{
   display: flex;
   align-items: center;
   gap: 20px;
@@ -171,24 +226,24 @@ body {
   padding: 25px;
   background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
   border-radius: 15px;
-}
+}}
 
-.price-now {
+.price-now {{
   font-size: 42px;
   font-weight: 900;
   background: var(--primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
+}}
 
-.price-old {
+.price-old {{
   font-size: 26px;
   color: #cbd5e0;
   text-decoration: line-through;
-}
+}}
 
-.badge {
+.badge {{
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: #fff;
   padding: 8px 18px;
@@ -196,9 +251,9 @@ body {
   font-size: 16px;
   font-weight: 700;
   box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
-}
+}}
 
-.desc {
+.desc {{
   padding: 25px 0;
   border-top: 2px solid var(--border);
   border-bottom: 2px solid var(--border);
@@ -206,16 +261,16 @@ body {
   line-height: 2;
   color: #4a5568;
   font-size: 16px;
-}
+}}
 
-.features {
+.features {{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
   margin: 30px 0;
-}
+}}
 
-.feature {
+.feature {{
   display: flex;
   align-items: center;
   gap: 12px;
@@ -224,42 +279,42 @@ body {
   border-radius: 12px;
   font-weight: 600;
   font-size: 14px;
-}
+}}
 
-.feature-icon {
+.feature-icon {{
   font-size: 28px;
-}
+}}
 
-.order-form {
+.order-form {{
   background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
   padding: 35px;
   border-radius: 20px;
   margin-top: 35px;
   border: 2px solid var(--border);
-}
+}}
 
-.form-title {
+.form-title {{
   font-size: 24px;
   font-weight: 900;
   color: var(--secondary);
   margin-bottom: 25px;
   text-align: center;
-}
+}}
 
-.form-group {
+.form-group {{
   margin-bottom: 25px;
-}
+}}
 
-.label {
+.label {{
   display: block;
   font-weight: 700;
   margin-bottom: 10px;
   color: var(--secondary);
   font-size: 15px;
-}
+}}
 
 .input,
-.textarea {
+.textarea {{
   width: 100%;
   padding: 15px 18px;
   border: 2px solid var(--border);
@@ -268,25 +323,25 @@ body {
   font-family: 'Cairo', sans-serif;
   transition: all 0.3s;
   background: #fff;
-}
+}}
 
 .input:focus,
-.textarea:focus {
+.textarea:focus {{
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-}
+}}
 
-.textarea {
+.textarea {{
   resize: vertical;
   min-height: 90px;
-}
+}}
 
-.phone-input {
+.phone-input {{
   position: relative;
-}
+}}
 
-.phone-prefix {
+.phone-prefix {{
   position: absolute;
   right: 18px;
   top: 50%;
@@ -295,19 +350,19 @@ body {
   color: #667eea;
   font-size: 16px;
   pointer-events: none;
-}
+}}
 
-.phone-field {
+.phone-field {{
   padding-right: 70px;
-}
+}}
 
-.qty-box {
+.qty-box {{
   display: flex;
   align-items: center;
   gap: 15px;
-}
+}}
 
-.qty-btn {
+.qty-btn {{
   width: 45px;
   height: 45px;
   border: 2px solid var(--border);
@@ -318,16 +373,16 @@ body {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s;
-}
+}}
 
-.qty-btn:hover {
+.qty-btn:hover {{
   background: var(--primary);
   color: #fff;
   border-color: transparent;
   transform: scale(1.1);
-}
+}}
 
-.qty-val {
+.qty-val {{
   width: 80px;
   text-align: center;
   padding: 12px;
@@ -336,9 +391,9 @@ body {
   font-size: 18px;
   font-weight: 700;
   background: #fff;
-}
+}}
 
-.whatsapp {
+.whatsapp {{
   width: 100%;
   background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
   color: #fff;
@@ -356,43 +411,43 @@ body {
   margin-top: 25px;
   box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
   font-family: 'Cairo', sans-serif;
-}
+}}
 
-.whatsapp:hover {
+.whatsapp:hover {{
   transform: translateY(-5px);
   box-shadow: 0 15px 40px rgba(37, 211, 102, 0.5);
-}
+}}
 
-.wa-icon {
+.wa-icon {{
   font-size: 28px;
-}
+}}
 
-.error {
+.error {{
   color: #e53e3e;
   font-size: 14px;
   font-weight: 600;
   margin-top: 8px;
   display: none;
-}
+}}
 
-@media (max-width: 768px) {
-  .product-grid {
+@media (max-width: 768px) {{
+  .product-grid {{
     grid-template-columns: 1fr;
     gap: 30px;
-  }
+  }}
   
-  .title {
+  .title {{
     font-size: 26px;
-  }
+  }}
   
-  .price-now {
+  .price-now {{
     font-size: 32px;
-  }
+  }}
   
-  .features {
+  .features {{
     grid-template-columns: 1fr;
-  }
-}
+  }}
+}}
 </style>
 </head>
 <body>
@@ -407,18 +462,18 @@ body {
   <div class="breadcrumb">
     <a href="../index.html">الرئيسية</a> / 
     <a href="../products.html">المنتجات</a> / 
-    <span>كابل شحن ونقل بيانات سريع  3x1...</span>
+    <span>{title}</span>
   </div>
 </div>
 
 <div class="container">
   <div class="product-grid">
     <div class="gallery">
-      <img src="https://m5zoon.com/public/uploads/products/1757780851171615.webp" alt="كابل شحن ونقل بيانات سريع  3x1..." class="product-img">
+      <img src="{image}" alt="{title}" class="product-img">
     </div>
     
     <div class="summary">
-      <h1 class="title">كابل شحن ونقل بيانات سريع  3x1...</h1>
+      <h1 class="title">{title}</h1>
       
       <div class="rating">
         <span class="stars">★★★★★</span>
@@ -426,13 +481,13 @@ body {
       </div>
       
       <div class="price-box">
-        <span class="price-now">178 ر.س</span>
-        <span class="price-old">238 ر.س</span>
-        <span class="badge">-25%</span>
+        <span class="price-now">{sale_price} ر.س</span>
+        <span class="price-old">{price} ر.س</span>
+        <span class="badge">-{discount}%</span>
       </div>
       
       <div class="desc">
-        <p>كابل شحن ونقل بيانات سريع  3x1... - منتج عالي الجودة متوفر الآن بأفضل الأسعار. احصل عليه مع ضمان الجودة والإرجاع المجاني.</p>
+        <p>{title} - منتج عالي الجودة متوفر الآن بأفضل الأسعار. احصل عليه مع ضمان الجودة والإرجاع المجاني.</p>
       </div>
       
       <div class="features">
@@ -505,49 +560,49 @@ body {
 </div>
 
 <script>
-function increaseQty() {
+function increaseQty() {{
   const input = document.getElementById('quantity');
   input.value = parseInt(input.value) + 1;
-}
+}}
 
-function decreaseQty() {
+function decreaseQty() {{
   const input = document.getElementById('quantity');
-  if (parseInt(input.value) > 1) {
+  if (parseInt(input.value) > 1) {{
     input.value = parseInt(input.value) - 1;
-  }
-}
+  }}
+}}
 
-function validateSaudiPhone(phone) {
-  const regex = /^5[0-9]{8}$/;
+function validateSaudiPhone(phone) {{
+  const regex = /^5[0-9]{{8}}$/;
   return regex.test(phone);
-}
+}}
 
-document.getElementById('orderForm').addEventListener('submit', function(e) {
+document.getElementById('orderForm').addEventListener('submit', function(e) {{
   e.preventDefault();
   
   const phone = document.getElementById('buyerPhone').value.trim();
   const phoneError = document.getElementById('phoneError');
   
-  if (!validateSaudiPhone(phone)) {
+  if (!validateSaudiPhone(phone)) {{
     phoneError.style.display = 'block';
     document.getElementById('buyerPhone').style.borderColor = '#e53e3e';
     return;
-  } else {
+  }} else {{
     phoneError.style.display = 'none';
     document.getElementById('buyerPhone').style.borderColor = '';
-  }
+  }}
   
   const altPhone = document.getElementById('altPhone').value.trim();
   const altPhoneError = document.getElementById('altPhoneError');
   
-  if (altPhone && !validateSaudiPhone(altPhone)) {
+  if (altPhone && !validateSaudiPhone(altPhone)) {{
     altPhoneError.style.display = 'block';
     document.getElementById('altPhone').style.borderColor = '#e53e3e';
     return;
-  } else {
+  }} else {{
     altPhoneError.style.display = 'none';
     document.getElementById('altPhone').style.borderColor = '';
-  }
+  }}
   
   const name = encodeURIComponent(document.getElementById('buyerName').value);
   const address = encodeURIComponent(document.getElementById('buyerAddress').value);
@@ -556,25 +611,99 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
   const fullPhone = '+966' + phone;
   const fullAltPhone = altPhone ? '+966' + altPhone : 'غير متوفر';
   
-  const productName = encodeURIComponent("كابل شحن ونقل بيانات سريع  3x1...");
-  const productPrice = "178 ر.س";
-  const productLink = "https://mahkzoon-alsaudia.arabsad.com/products/كابل-شحن-ونقل-بيانات-سريع--3x1.html";
+  const productName = encodeURIComponent("{title}");
+  const productPrice = "{sale_price} ر.س";
+  const productLink = "https://mahkzoon-alsaudia.arabsad.com/products/{slug}.html";
   
   let message = `🛍️ *طلب جديد من مخزون السعودية*%0A%0A`;
-  message += `📦 *المنتج:* ${productName}%0A`;
-  message += `💰 *السعر:* ${productPrice}%0A`;
-  message += `🔗 *الرابط:* ${productLink}%0A%0A`;
+  message += `📦 *المنتج:* ${{productName}}%0A`;
+  message += `💰 *السعر:* ${{productPrice}}%0A`;
+  message += `🔗 *الرابط:* ${{productLink}}%0A%0A`;
   message += `👤 *بيانات المشتري:*%0A`;
-  message += `الاسم: ${name}%0A`;
-  message += `الجوال: ${fullPhone}%0A`;
-  message += `العنوان: ${address}%0A`;
-  message += `عدد القطع: ${quantity}%0A`;
-  message += `رقم بديل: ${fullAltPhone}`;
+  message += `الاسم: ${{name}}%0A`;
+  message += `الجوال: ${{fullPhone}}%0A`;
+  message += `العنوان: ${{address}}%0A`;
+  message += `عدد القطع: ${{quantity}}%0A`;
+  message += `رقم بديل: ${{fullAltPhone}}`;
   
-  const whatsappUrl = `https://wa.me/201110760081?text=${message}`;
+  const whatsappUrl = `https://wa.me/201110760081?text=${{message}}`;
   window.open(whatsappUrl, '_blank');
-});
+}});
 </script>
 
 </body>
-</html>
+</html>"""
+    
+    return html_content
+
+def main():
+    """الدالة الرئيسية"""
+    print("="*70)
+    print("🔥 سكريبت توليد جميع صفحات المنتجات من جديد (نسخة محسّنة)")
+    print("="*70)
+    
+    # التحقق من وجود ملف المنتجات
+    if not os.path.exists('data/products.json'):
+        print("❌ خطأ: ملف data/products.json غير موجود!")
+        return
+    
+    # قراءة ملف المنتجات
+    with open('data/products.json', 'r', encoding='utf-8') as f:
+        products = json.load(f)
+    
+    print(f"✅ تم قراءة {len(products)} منتج من products.json\n")
+    
+    # حذف مجلد products القديم
+    if os.path.exists('products'):
+        print("🗑️  حذف مجلد products القديم...")
+        shutil.rmtree('products')
+        print("✅ تم الحذف\n")
+    
+    # إنشاء مجلد products جديد
+    os.makedirs('products', exist_ok=True)
+    print("📁 تم إنشاء مجلد products جديد\n")
+    
+    print(f"🚀 بدء توليد {len(products)} صفحة منتج...\n")
+    
+    success_count = 0
+    errors = []
+    
+    for i, product in enumerate(products, 1):
+        try:
+            title = product['title']
+            slug = slugify(title)
+            filename = f"{slug}.html"
+            filepath = f"products/{filename}"
+            
+            # إنشاء محتوى HTML
+            html_content = create_product_html(product)
+            
+            # حفظ الملف
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+            
+            print(f"✅ [{i}/{len(products)}] {filename}")
+            success_count += 1
+            
+        except Exception as e:
+            error_msg = f"[{i}/{len(products)}] {product.get('title', 'Unknown')}: {str(e)}"
+            print(f"❌ {error_msg}")
+            errors.append(error_msg)
+    
+    print("\n" + "="*70)
+    print(f"✅ تم توليد {success_count} صفحة بنجاح!")
+    
+    if errors:
+        print(f"❌ فشل {len(errors)} صفحة:")
+        for error in errors:
+            print(f"  ❌ {error}")
+    
+    print("="*70)
+    print("\n💡 الآن يمكنك رفع الملفات إلى GitHub:")
+    print("   git add products/")
+    print("   git commit -m \"إعادة توليد: جميع صفحات المنتجات بروابط صحيحة\"")
+    print("   git push")
+    print("\n")
+
+if __name__ == "__main__":
+    main()

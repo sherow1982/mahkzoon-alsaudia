@@ -38,8 +38,8 @@
   },
   "aggregateRating": {
     "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "15"
+    "ratingValue": "4.8",
+    "reviewCount": "12"
   }
 }
 </script>
@@ -91,6 +91,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-decoration: none;
 }
 
 .breadcrumb {
@@ -374,67 +375,6 @@ body {
   display: none;
 }
 
-.reviews-section {
-  background: #fff;
-  padding: 40px;
-  border-radius: 20px;
-  margin-top: 60px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-}
-
-.reviews-title {
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--secondary);
-  margin-bottom: 35px;
-  text-align: center;
-}
-
-.review-item {
-  padding: 25px;
-  background: var(--light);
-  border-radius: 15px;
-  margin-bottom: 20px;
-  border: 2px solid var(--border);
-  transition: all 0.3s;
-}
-
-.review-item:hover {
-  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-  transform: translateY(-3px);
-}
-
-.review-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.reviewer-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--secondary);
-}
-
-.review-date {
-  font-size: 14px;
-  color: #718096;
-}
-
-.review-stars {
-  color: #f6ad55;
-  font-size: 20px;
-  margin-bottom: 12px;
-  letter-spacing: 2px;
-}
-
-.review-text {
-  color: #4a5568;
-  line-height: 1.8;
-  font-size: 16px;
-}
-
 @media (max-width: 768px) {
   .product-grid {
     grid-template-columns: 1fr;
@@ -482,13 +422,13 @@ body {
       
       <div class="rating">
         <span class="stars">★★★★★</span>
-        <span class="reviews">(15 تقييم)</span>
+        <span class="reviews">(12 تقييم)</span>
       </div>
       
       <div class="price-box">
         <span class="price-now">245 ر.س</span>
         <span class="price-old">305 ر.س</span>
-        <span class="badge">-20%</span>
+        <span class="badge">-19%</span>
       </div>
       
       <div class="desc">
@@ -561,146 +501,6 @@ body {
         </form>
       </div>
     </div>
-  </div>
-  
-  <div class="reviews-section">
-    <h2 class="reviews-title">💬 تقييمات العملاء</h2>
-    
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">وليد محمد الجهني</strong>
-            <span class="review-date">2024-08-12</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">جداً راضي عن الشراء، بكرر الطلب أكيد</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">زياد سعد الربيعان</strong>
-            <span class="review-date">2025-09-24</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">ماشاءالله تبارك الله، المنتج أكثر من رائع ويستاهل كل ريال</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">تركي ناصر الحربي</strong>
-            <span class="review-date">2024-07-31</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">صراحة خدمة محترمة ومنتج أروع</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">لمى أحمد الحمدان</strong>
-            <span class="review-date">2025-11-13</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">والله يستاهل أكثر من خمس نجوم لو فيه</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">عبدالرحمن علي المطيري</strong>
-            <span class="review-date">2024-08-08</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">ياليت عرفته من زمان، صار عندي المفضل</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">ماجد تركي العنزي</strong>
-            <span class="review-date">2024-08-25</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">صراحة مافيه كلام، جودة تتكلم عن نفسها</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">طلال سعيد العمري</strong>
-            <span class="review-date">2024-03-20</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">ممتاز ممتاز ممتاز، ما قصّر أبداً والسعر حلو</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">سارة فهد الرشيد</strong>
-            <span class="review-date">2025-03-14</span>
-          </div>
-          <div class="review-stars">★★★★☆</div>
-          <p class="review-text">ممتاز للاستخدام اليومي، سعر حلو وجودة أحلى</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">سعد عبدالله الشمري</strong>
-            <span class="review-date">2025-01-13</span>
-          </div>
-          <div class="review-stars">★★★★☆</div>
-          <p class="review-text">الله يبارك، جودة ممتازة وتوصيل سريع، أنصح فيه بقوة</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">بدر عبدالرحمن الشهراني</strong>
-            <span class="review-date">2024-02-26</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">والله العظيم منتج ولا أروع، ريحني كثير</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">شهد عبدالعزيز السديري</strong>
-            <span class="review-date">2024-12-11</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">بصراحة شيء يفتح النفس، جودة تطمن</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">باسل محمد الفوزان</strong>
-            <span class="review-date">2025-02-22</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">ياسلام عالجودة، المنتج نفس الوصف بالضبط ومافيه غش</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">حمد عبدالله الدويش</strong>
-            <span class="review-date">2024-12-20</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">الله يوفقكم، منتج رهيب وخدمة أروع</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">عمر سعد الغامدي</strong>
-            <span class="review-date">2024-08-22</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">ماشاء الله لا قوة إلا بالله، جودة خيالية</p>
-        </div>
-        
-        <div class="review-item">
-          <div class="review-header">
-            <strong class="reviewer-name">وعد محمد الراجحي</strong>
-            <span class="review-date">2025-10-19</span>
-          </div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">بصراحة فاق كل التوقعات، شكراً على الخدمة الممتازة</p>
-        </div>
-        
   </div>
 </div>
 
